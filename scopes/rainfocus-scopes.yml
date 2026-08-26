@@ -1,0 +1,31 @@
+generated: '2026-08-26'
+method: probed
+source: https://api.rainfocus.com/.well-known/openid-configuration
+docs: null
+docs_note: >-
+  RainFocus publishes no scopes or permissions reference page. Searching the public site and the
+  API and MCP Tools terms turned up no scope names.
+description: >-
+  The only OAuth scope RainFocus advertises anywhere machine-readable is "openid", read from its
+  own OIDC discovery document. RainFocus describes "short-lived, scoped access tokens" and
+  "per-event scoping" for MCP Profiles, so a scope or permission vocabulary demonstrably exists
+  inside the product - it is simply not published. No scope names are invented here.
+authorization_server: https://events.rainfocus.com/oidc
+scopes:
+- name: openid
+  description: >-
+    Standard OpenID Connect scope requesting an ID token. Advertised in scopes_supported.
+  source: '.well-known/openid-configuration scopes_supported'
+scope_count: 1
+undocumented_scoping_mechanisms:
+- mechanism: API Profile
+  description: >-
+    Each RainFocus API Profile declares which endpoints are enabled (for example Attendee Store),
+    which is the effective authorization boundary for the REST API. Profile names and the endpoint
+    catalog are customer-specific and not published.
+  source: https://experienceleague.adobe.com/en/docs/experience-platform/destinations/catalog/marketing-automation/rainfocus
+- mechanism: MCP Profile per-event scoping
+  description: >-
+    Planners activate and control MCP tool access event by event, layered on per-user
+    authentication and role-based access control.
+  source: https://www.rainfocus.com/company/news-press/rainfocus-launches-ai-agent-connectivity-for-event-data-with-mcp-profiles/

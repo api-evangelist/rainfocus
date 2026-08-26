@@ -1,0 +1,44 @@
+generated: '2026-08-26'
+method: searched
+source: https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+limit_count: 0
+description: >-
+  RainFocus enforces rate limits but publishes none of them. The API and MCP Tools terms confirm
+  their existence by forbidding circumvention, and reserve the right to impose further limits, but
+  no number, window, scope or response header is published anywhere public. No rate-limit header was
+  returned on any observed response.
+limits: []
+evidence:
+- source: https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+  status: 200
+  quote: >-
+    "Customer will not, and will not permit any person or system to: ... bypass or circumvent usage
+    limits, rate limits, authentication, or security controls"
+- source: https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+  status: 200
+  quote: >-
+    "RainFocus grants Customer a non-exclusive, non-transferable, revocable, limited license to
+    access and use the Developer Tools ... subject to any limitations RainFocus may impose."
+response_headers:
+  observed: []
+  probed_on:
+  - url: https://api.rainfocus.com/api
+    status: 400
+    headers_present: [content-security-policy, strict-transport-security, vary, access-control-allow-methods, access-control-max-age, access-control-allow-credentials, access-control-allow-headers, set-cookie, content-language]
+  - url: https://api.rainfocus.com/mcp/
+    status: 401
+    headers_present: [www-authenticate, content-security-policy, strict-transport-security, vary, access-control-allow-methods, access-control-allow-headers, set-cookie]
+  x_ratelimit: false
+  ratelimit_draft: false
+  retry_after: false
+status_on_exhaustion: unknown
+monitoring_disclosure:
+  source: https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+  quote: >-
+    "RainFocus may monitor Developer Tools usage to maintain platform performance, resolve
+    technical issues, and ensure platform security. Such monitoring is limited to system-level
+    metrics, error logs, and usage patterns."
+note: >-
+  An agent integrating with RainFocus cannot pace itself: it has neither a documented quota nor a
+  runtime signal, and the terms prohibit publishing the latency or throughput measurements it would
+  need to infer one. This is a zero recorded honestly, not an unchecked field.

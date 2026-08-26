@@ -1,0 +1,29 @@
+generated: '2026-08-26'
+method: searched
+source: https://www.rainfocus.com/
+plan_count: 0
+description: >-
+  RainFocus publishes no pricing. It is an enterprise, sales-led event management platform sold
+  through a demo request and a statement of work; there is no self-serve tier, no published price
+  list and no public plan comparison. The API and MCP Tools are licensed under the customer's SOW
+  rather than sold as a metered developer product, so there is no API price to record either.
+plans: []
+pricing_model: enterprise-contact-sales
+evidence:
+- url: https://www.rainfocus.com/pricing/
+  status: 403
+  note: >-
+    No pricing page exists. The S3-fronted origin returns AccessDenied for missing keys, and
+    /pricing/ is absent from the published sitemap.xml.
+- url: https://www.rainfocus.com/request-demo/
+  status: 200
+  note: The published commercial entry point - a demo request form, not a signup.
+- url: https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+  status: 200
+  quote: >-
+    "These terms govern Customer's use of the RainFocus application programming interfaces ('APIs')
+    and Model Context Protocol tools ('MCP Tools') (collectively, 'Developer Tools') under the
+    applicable statement of work ('SOW')."
+- url: https://www.rainfocus.com/company/partner-program/
+  status: 200
+  note: Partner program exists; no published commercial terms.

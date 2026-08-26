@@ -1,0 +1,59 @@
+generated: '2026-08-26'
+method: searched
+source: registry searches on npm, PyPI, RubyGems and Packagist + GitHub org probe
+package_count: 0
+official_package_count: 0
+description: >-
+  RainFocus publishes no client libraries in any public package registry, and operates no public
+  GitHub organization. Integrators call the REST API directly or use one of the platform
+  connectors RainFocus builds inside partner ecosystems (Salesforce AppExchange, Adobe Experience
+  Platform), which are applications rather than distributable SDK packages. No SDKs pointer is
+  emitted in apis.yml.
+packages: []
+registries_searched:
+- registry: npm
+  query: rainfocus
+  endpoint: https://registry.npmjs.org/-/v1/search?text=rainfocus
+  results: 0
+- registry: pypi
+  query: rainfocus
+  endpoint: https://pypi.org/pypi/rainfocus/json
+  status: 404
+  results: 0
+- registry: rubygems
+  query: rainfocus
+  endpoint: https://rubygems.org/api/v1/search.json?query=rainfocus
+  results: 0
+- registry: packagist
+  query: rainfocus
+  endpoint: https://packagist.org/search.json?q=rainfocus
+  results: 0
+  note: matches returned were unrelated packages (amazon-rainforest and similar), none RainFocus.
+source_control:
+  github_org: https://github.com/rainfocus
+  github_org_status: 404
+  note: >-
+    No RainFocus GitHub organization exists. A GitHub code search for "rainfocus" returns 73
+    repositories, all of them personal - candidate coding assessments, hiring exercises and
+    conference theme forks. None is first-party and none is recorded here.
+first_party_distributions_that_are_not_packages:
+- name: 'RainFocus for Salesforce: Event Insights and Activation'
+  channel: Salesforce AppExchange
+  registry: null
+  version: null
+  published: null
+  official: true
+  note: >-
+    A managed Salesforce application, not a redistributable package. No registry metadata endpoint
+    exists to query, so version and published are recorded null rather than guessed.
+  source: https://www.rainfocus.com/rainfocus-for-salesforce-app/
+- name: RainFocus source and destination connectors for Adobe Experience Platform
+  channel: Adobe Experience Platform catalog
+  registry: null
+  version: null
+  published: null
+  official: true
+  note: >-
+    Built and maintained by the RainFocus team per Adobe's connector documentation. Platform
+    connectors, not installable SDKs; no version metadata is published.
+  source: https://experienceleague.adobe.com/en/docs/experience-platform/destinations/catalog/marketing-automation/rainfocus

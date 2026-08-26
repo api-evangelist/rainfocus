@@ -1,0 +1,179 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  live probes of RainFocus discovery documents + https://www.rainfocus.com/privacy-security/ +
+  https://www.rainfocus.com/privacy-security/vulnerability-disclosure/
+description: >-
+  Standards and compliance conformance for RainFocus. The identity and agent-protocol rows are
+  probed from documents RainFocus serves itself and are therefore evidence-backed. The certification
+  rows are claims published on the provider's own privacy and security pages; API Evangelist has not
+  seen the underlying reports and records them as claimed, not verified.
+standards:
+- id: oidc
+  name: OpenID Connect Discovery 1.0
+  conforms: true
+  evidence:
+    url: https://api.rainfocus.com/.well-known/openid-configuration
+    status: 200
+    detail: >-
+      Serves issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, jwks_uri,
+      scopes_supported, response_types_supported, subject_types_supported and
+      id_token_signing_alg_values_supported - all required discovery members present.
+  deviations:
+  - code_challenge_methods_supported is absent, so PKCE is not advertised.
+  - scopes_supported contains only "openid"; no resource scopes are published.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: true
+  evidence:
+    url: https://api.rainfocus.com/.well-known/oauth-authorization-server
+    status: 200
+    detail: >-
+      authorization_code and refresh_token grants; client_secret_basic and client_secret_post
+      client authentication. A separate OAuth (Global) client-credentials profile is documented for
+      server-to-server integrations.
+- id: rfc8414
+  name: RFC 8414 OAuth 2.0 Authorization Server Metadata
+  conforms: true
+  evidence:
+    url: https://api.rainfocus.com/.well-known/oauth-authorization-server
+    status: 200
+- id: rfc9728
+  name: RFC 9728 OAuth 2.0 Protected Resource Metadata
+  conforms: true
+  evidence:
+    url: https://events.rainfocus.com/.well-known/oauth-protected-resource/mcp//
+    status: 200
+    detail: >-
+      Returned resource, authorization_servers, bearer_token_methods_supported and jwks_uri, and is
+      correctly advertised from the WWW-Authenticate header of the 401 on the MCP endpoint.
+  deviations:
+  - >-
+      The metadata URL and the authorization_servers value both contain a doubled slash
+      (https://events.rainfocus.com//oidc), a path-join defect. A strict client comparing the
+      issuer against the discovery document's issuer (https://events.rainfocus.com/oidc) will see a
+      mismatch.
+- id: rfc7517
+  name: RFC 7517 JSON Web Key Set
+  conforms: true
+  evidence:
+    url: https://events.rainfocus.com/oidc/.well-known/jwks
+    status: 200
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  evidence:
+    url: https://api.rainfocus.com/mcp/
+    status: 401
+    detail: >-
+      Live MCP endpoint accepting mcp-session-id and mcp-protocol-version headers and returning an
+      RFC 9728 bearer challenge. Tool schemas are auth-gated and were not introspected.
+  deviations:
+  - >-
+      The 401 body is text/plain ("Access token not found in mcp request") rather than a JSON-RPC
+      error object.
+- id: w3c-trace-context
+  name: W3C Trace Context
+  conforms: partial
+  evidence:
+    url: https://api.rainfocus.com
+    status: 400
+    detail: >-
+      traceparent and tracestate are accepted inbound per Access-Control-Allow-Headers. No trace or
+      request identifier is returned on responses, so propagation is one-directional.
+- id: rfc9457
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence:
+    url: https://api.rainfocus.com/api
+    status: 400
+    detail: >-
+      Returns a proprietary {"responseCode","responseMessage"} envelope as application/json, not
+      application/problem+json.
+- id: rfc9116
+  name: RFC 9116 security.txt
+  conforms: false
+  evidence:
+    url: https://www.rainfocus.com/.well-known/security.txt
+    status: 403
+    detail: >-
+      Not served on any host, despite RainFocus operating a real vulnerability disclosure program
+      with a published security@rainfocus.com contact.
+- id: rfc8594
+  name: RFC 8594 Sunset HTTP Header
+  conforms: false
+  evidence:
+    url: https://api.rainfocus.com
+    status: 400
+    detail: No Sunset or Deprecation header observed; no deprecation policy published.
+- id: openapi
+  name: OpenAPI
+  conforms: false
+  evidence:
+    url: https://api.rainfocus.com/openapi.json
+    status: 404
+    detail: >-
+      No OpenAPI, Swagger, GraphQL SDL, AsyncAPI, WSDL or Protobuf contract is published at any
+      probed location on any RainFocus host.
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  evidence:
+    url: https://api.rainfocus.com/.well-known/agent-card.json
+    status: 404
+domain_standards:
+  applicable: false
+  note: >-
+    Event management has no widely adopted machine-readable interchange standard equivalent to
+    FHIR, SCIM or ISO 20022, and RainFocus declares none in any published contract. Reward-only
+    dimension - recorded as not applicable rather than failing, and nothing is invented to fill it.
+  probed_for:
+  - schema.org/Event vocabulary in a published contract
+  - iCalendar / RFC 5545 feed advertisement
+  - SCIM schema URNs for the attendee identity surface
+  - OData $metadata
+compliance:
+  claimed_by_provider: true
+  source: https://www.rainfocus.com/privacy-security/
+  verified_by_api_evangelist: false
+  certifications:
+  - id: soc2
+    name: SOC 2 (AICPA SOC)
+    conforms: claimed
+    evidence:
+      url: https://www.rainfocus.com/privacy-security/
+      status: 200
+      detail: Stated as "AICPA SOC Certified".
+  - id: iso27001
+    name: ISO/IEC 27001:2022
+    conforms: claimed
+    evidence:
+      url: https://www.rainfocus.com/privacy-security/
+      status: 200
+      detail: >-
+        "RainFocus is ISO/IEC 27001:2022 certified and is audited annually." The vulnerability
+        disclosure page renders the same claim as "ISO/IEC 26001", which is a typo - 26001 is not
+        an information security standard.
+  - id: pcidss
+    name: PCI DSS
+    conforms: claimed
+    evidence:
+      url: https://www.rainfocus.com/privacy-security/
+      status: 200
+  - id: gdpr
+    name: GDPR
+    conforms: claimed
+    evidence:
+      url: https://www.rainfocus.com/privacy-policy/
+      status: 200
+  - id: ccpa
+    name: CCPA
+    conforms: claimed
+    evidence:
+      url: https://www.rainfocus.com/privacy-policy/
+      status: 200
+  not_claimed:
+  - HIPAA
+  - FedRAMP
+  - TX-RAMP
+  - StateRAMP

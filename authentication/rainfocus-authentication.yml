@@ -1,0 +1,126 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://api.rainfocus.com/.well-known/openid-configuration (probed) +
+  https://experienceleague.adobe.com/en/docs/experience-platform/destinations/catalog/marketing-automation/rainfocus
+  (RainFocus-authored connector documentation) +
+  https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+docs: https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+description: >-
+  RainFocus publishes no OpenAPI, so no securityScheme block could be derived. This profile is
+  assembled from three things that ARE public: the OIDC/OAuth discovery documents RainFocus serves
+  itself, the live behaviour of api.rainfocus.com and its MCP endpoint under an unauthenticated
+  request, and the RainFocus-authored setup instructions carried in the Adobe Experience Platform
+  destination connector. Nothing here is invented and no credential values appear.
+derivation_note: >-
+  derive-authentication.py was not run - it reads openapi/ securitySchemes and this repo has no
+  spec. Everything below is probed or read from published documentation.
+schemes:
+- id: api-profile
+  type: apiKey
+  in: header
+  name: apiProfile
+  required: true
+  description: >-
+    Every request to a /api path on api.rainfocus.com must name an API Profile. An API Profile is a
+    named integration configuration created per customer in the RainFocus Integration Suite that
+    declares which endpoints are enabled (for example Attendee Store) and carries the modular field
+    mappings for that integration. Omitting it returns HTTP 400 with responseCode 103 and
+    "Required parameter missing: apiProfile".
+  evidence:
+    request: GET https://api.rainfocus.com/api
+    status: 400
+    body: '{"responseCode":"103","responseMessage":"Required parameter missing: apiProfile"}'
+  companion_headers:
+  - rfApiProfileId
+  - authToken
+  - rfAuthToken
+  - rfWidgetId
+  - widget
+  - rfcsrf
+  - extraFields
+  companion_headers_note: >-
+    Observed in the Access-Control-Allow-Headers response header on api.rainfocus.com. Their
+    individual semantics are not publicly documented and are not guessed at here.
+- id: oauth2-global
+  type: oauth2
+  flow: client_credentials
+  description: >-
+    RainFocus API Profiles can be created with "OAuth (Global)", which issues a Client ID and
+    Client Secret used by server-to-server integrations. This is the credential model the Adobe
+    Experience Platform RainFocus destination requires: "Create a RainFocus API Profile with OAuth
+    (Global)", ensure the Attendee Store endpoint is enabled, and generate a Client ID and Client
+    Secret.
+  parameters_required_by_integrators:
+  - name: environment
+    example_values: [dev, prod]
+  - name: orgId
+    note: unique organization identifier for the customer's RainFocus instance
+  - name: eventId
+    note: RainFocus event code identifying the destination event
+  token_endpoint: null
+  token_endpoint_note: >-
+    Not published. The customer-facing token URL is delivered with the profile credentials, not on
+    the public web.
+  source: >-
+    https://experienceleague.adobe.com/en/docs/experience-platform/destinations/catalog/marketing-automation/rainfocus
+    - a connector page RainFocus itself authors and maintains.
+- id: oidc
+  type: openIdConnect
+  openIdConnectUrl: https://api.rainfocus.com/.well-known/openid-configuration
+  issuer: https://events.rainfocus.com/oidc
+  description: >-
+    A full OpenID Connect provider fronted by both api.rainfocus.com and events.rainfocus.com. This
+    is the authorization server the MCP endpoint delegates to.
+  authorization_endpoint: https://events.rainfocus.com/oidc/auth
+  token_endpoint: https://events.rainfocus.com/oidc/token
+  userinfo_endpoint: https://events.rainfocus.com/oidc/userData
+  jwks_uri: https://events.rainfocus.com/oidc/.well-known/jwks
+  scopes_supported: [openid]
+  response_types_supported:
+  - code
+  - id_token
+  - token
+  - code id_token
+  - code token
+  - id_token token
+  - code id_token token
+  response_modes_supported: [query]
+  grant_types_supported: [authorization_code, refresh_token]
+  token_endpoint_auth_methods_supported: [client_secret_basic, client_secret_post]
+  id_token_signing_alg_values_supported: [RS256]
+  subject_types_supported: [public]
+  pkce_supported: false
+  pkce_note: >-
+    code_challenge_methods_supported is absent from the discovery document, so PKCE support is not
+    advertised. That is a real gap for a public MCP client.
+- id: mcp-bearer
+  type: http
+  scheme: bearer
+  description: >-
+    The RainFocus Nexus MCP endpoint requires an OAuth bearer token in the Authorization header. An
+    unauthenticated tools/list POST returns 401 with a WWW-Authenticate challenge naming RFC 9728
+    protected-resource metadata, which is the discovery path an MCP client follows to find the
+    authorization server.
+  applies_to: https://api.rainfocus.com/mcp/
+  bearer_token_methods_supported: [header]
+  authorization_servers: [https://events.rainfocus.com/oidc]
+  token_lifetime: >-
+    RainFocus describes short-lived, scoped access tokens plus refresh tokens with per-user
+    authentication, role-based access control and per-event scoping.
+  evidence:
+    request: POST https://api.rainfocus.com/mcp/ tools/list
+    status: 401
+    www_authenticate: Bearer resource_metadata="https://events.rainfocus.com/.well-known/oauth-protected-resource/mcp//"
+credential_handling_obligations:
+  source: https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+  obligations:
+  - Customer must maintain the confidentiality of all API keys, MCP credentials, tokens and endpoints.
+  - Sharing, distributing or exposing API keys, MCP credentials, tokens or endpoints to any unauthorized person or system is prohibited.
+  - Bypassing or circumventing usage limits, rate limits, authentication or security controls is prohibited.
+  - On termination, Customer must destroy all copies of API keys, MCP credentials, tokens and cached API responses.
+gaps:
+- No public authentication reference page; the auth model must be reconstructed from a partner connector doc.
+- No PKCE advertised in OIDC discovery.
+- scopes_supported is only "openid" - no resource scopes are published for either the REST API or the MCP server.
+- No token endpoint published for the OAuth (Global) client-credentials flow.

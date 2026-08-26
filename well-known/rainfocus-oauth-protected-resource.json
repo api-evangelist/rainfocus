@@ -1,0 +1,1 @@
+{"authorization_servers":["https://events.rainfocus.com/oidc"],"bearer_token_methods_supported":["header"],"jwks_uri":"https://events.rainfocus.com/oidc/.well-known/jwks"}

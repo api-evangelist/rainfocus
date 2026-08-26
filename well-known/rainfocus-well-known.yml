@@ -1,0 +1,145 @@
+generated: '2026-08-26'
+method: probed
+source: live GET of each /.well-known/ path on every RainFocus host
+description: >-
+  RainFocus serves a real machine-readable identity and MCP discovery surface on its API and
+  events hosts. api.rainfocus.com publishes OpenID Connect Discovery, RFC 8414 authorization-server
+  metadata and RFC 9728 protected-resource metadata, all pointing at the RainFocus OIDC provider at
+  https://events.rainfocus.com/oidc; events.rainfocus.com serves the same three documents plus a
+  per-resource RFC 9728 document for the MCP endpoint, referenced from the WWW-Authenticate Bearer
+  challenge returned by an unauthenticated MCP request. No security.txt, api-catalog, ai-plugin,
+  llms.txt or A2A agent card is served anywhere. Neither api.rainfocus.com nor events.rainfocus.com
+  is a soft-404 catch-all - a control probe of /.well-known/zzz-control-xyz returned a genuine 404
+  on both. www.rainfocus.com is S3-fronted and answers 403 AccessDenied (its equivalent of not
+  found) for every /.well-known/* path and for /llms.txt.
+hit_count: 5
+hosts:
+- host: https://api.rainfocus.com
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: rainfocus-openid-configuration.json
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: rainfocus-oauth-authorization-server.json
+    standard: RFC 8414 OAuth 2.0 Authorization Server Metadata
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: rainfocus-oauth-protected-resource.json
+    standard: RFC 9728 OAuth 2.0 Protected Resource Metadata
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 404
+    file: null
+  soft_404_control:
+    path: /.well-known/zzz-control-xyz
+    status: 404
+- host: https://events.rainfocus.com
+  documents:
+  - path: /.well-known/oauth-protected-resource/mcp//
+    status: 200
+    file: rainfocus-oauth-protected-resource-mcp.json
+    standard: RFC 9728 OAuth 2.0 Protected Resource Metadata (per-resource, for the MCP endpoint)
+    note: >-
+      Exact path named by the WWW-Authenticate header on an unauthenticated POST to
+      https://api.rainfocus.com/mcp/ - the double slash is what the server emits.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    note: identical body to the api.rainfocus.com document; not saved twice
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    note: identical body to the api.rainfocus.com document; not saved twice
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    note: identical body to the api.rainfocus.com document; not saved twice
+  - path: /oidc/.well-known/jwks
+    status: 200
+    file: rainfocus-jwks.json
+    standard: RFC 7517 JSON Web Key Set
+    note: non-standard location - the OIDC discovery document names this jwks_uri directly.
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 404
+    file: null
+  soft_404_control:
+    path: /.well-known/zzz-control-xyz
+    status: 404
+- host: https://www.rainfocus.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    file: null
+    note: S3 AccessDenied XML - the origin's not-found response for a missing key, not a real gate.
+  - path: /.well-known/ai-plugin.json
+    status: 403
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 403
+    file: null
+  - path: /.well-known/agent.json
+    status: 403
+    file: null
+  - path: /.well-known/api-catalog
+    status: 301
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 301
+    file: null
+  - path: /llms.txt
+    status: 403
+    file: null
+  - path: /robots.txt
+    status: 200
+    file: null
+    note: 'User-Agent: * / Allow: / / Disallow: /style-guide/* - agents are not blocked.'
+- host: https://learn.rainfocus.com
+  documents:
+  - path: /llms.txt
+    status: 302
+    file: null
+    note: >-
+      REJECTED as a false positive. learn.rainfocus.com is a Next.js site whose unknown paths 302
+      to a 75,345-byte HTML shell. Following the redirect yields 200 HTML, not an llms.txt. A
+      control probe of /this-page-does-not-exist-xyz behaves identically, while a real page
+      (/secure-integrations) returns 200 with distinct content, which is how the two were told
+      apart.
+  - path: /openapi.json
+    status: 302
+    file: null
+    note: REJECTED - same catch-all redirect to the HTML shell, not an OpenAPI document.
+  - path: /secure-integrations
+    status: 200
+    file: null
+    note: >-
+      Real, distinct integrations page (RainFocus Academy). Marketing-grade only - it states "Our
+      RESTful APIs use modular field mappings to push and pull information in real time" and
+      publishes no base URL, endpoint, auth detail or spec link.

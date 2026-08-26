@@ -1,0 +1,81 @@
+generated: '2026-08-26'
+method: probed
+source: https://api.rainfocus.com/mcp/
+description: >-
+  RainFocus Nexus MCP Profiles is a first-party, hosted, remote Model Context Protocol server for
+  live event data. It was announced on 7 July 2026 and RainFocus describes it as "the first native
+  MCP with an enterprise-grade OAuth security layer" for event management. An MCP Profile is
+  configured per customer in the RainFocus Integration Suite (Integration Suite > Active Profiles >
+  MCP Profiles); the client authenticates over OAuth and receives a generated server URL, so the
+  tenant-specific URL a given customer uses is provisioned, not published. The shared entry point
+  is live and answers MCP requests today.
+deployment:
+  mode: remote
+  endpoint: https://api.rainfocus.com/mcp/
+  auth: oauth
+  verified: probed
+server:
+  name: rainfocus-nexus-mcp
+  transport: streamable-http
+  product: RainFocus Nexus - MCP Profiles
+  announced: '2026-07-07'
+  configuration_path: Integration Suite > Active Profiles > MCP Profiles
+x-evidence:
+  fetched: '2026-08-26'
+  request: POST https://api.rainfocus.com/mcp/ with {"jsonrpc":"2.0","id":1,"method":"tools/list"}
+  http_status: 401
+  body: Access token not found in mcp request
+  www_authenticate: >-
+    Bearer resource_metadata="https://events.rainfocus.com/.well-known/oauth-protected-resource/mcp//"
+  mcp_headers_accepted:
+  - mcp-session-id
+  - mcp-protocol-version
+  alternate_endpoint:
+    url: https://events.rainfocus.com/mcp/
+    http_status: 401
+    note: >-
+      Same server behind the events host; the RFC 9728 resource metadata names
+      https://events.rainfocus.com/mcp/ as the canonical resource identifier.
+authorization:
+  protected_resource_metadata: https://events.rainfocus.com/.well-known/oauth-protected-resource/mcp//
+  resource: https://events.rainfocus.com/mcp/
+  authorization_servers:
+  - https://events.rainfocus.com/oidc
+  bearer_token_methods_supported:
+  - header
+  jwks_uri: https://events.rainfocus.com/oidc/.well-known/jwks
+  grant_types_supported:
+  - authorization_code
+  - refresh_token
+  scopes_supported:
+  - openid
+  standards:
+  - RFC 9728 OAuth 2.0 Protected Resource Metadata
+  - RFC 8414 OAuth 2.0 Authorization Server Metadata
+  - OpenID Connect Discovery 1.0
+tools:
+  status: auth-gated
+  count: null
+  note: >-
+    NOT ENUMERATED. tools/list requires a bearer token, so the real tool names and inputSchemas
+    could not be read and none are invented here. RainFocus publishes no llms.txt or public tool
+    reference to fall back on. The capability classes below are quoted from the provider's own
+    launch announcement, not from an introspected manifest.
+capabilities_described_by_provider:
+  source: https://www.rainfocus.com/company/news-press/rainfocus-launches-ai-agent-connectivity-for-event-data-with-mcp-profiles/
+  read:
+  - live session capacity
+  - attendee check-in status
+  - attendee profiles
+  - exhibitor data
+  - session records
+  write:
+  - close registration
+  - update speaker details
+  governance:
+  - per-user authentication
+  - role-based access control
+  - full audit logging
+  - per-event scoping (planners activate tool access event by event)
+  - short-lived scoped access tokens plus refresh tokens
+terms: https://www.rainfocus.com/privacy-security/api-terms-and-conditions/

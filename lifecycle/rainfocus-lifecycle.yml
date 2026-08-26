@@ -1,0 +1,93 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://status.rainfocus.com/api/v2/summary.json (probed) +
+  https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+description: >-
+  RainFocus runs a real public status page but publishes no versioning policy, no deprecation
+  policy and no SLA on the public web. The only lifecycle commitment reachable without a contract
+  is section 6 of the API and MCP Tools terms, which reserves the right to change or discontinue
+  the Developer Tools at any time. No Deprecation pointer is emitted in apis.yml, because a
+  reservation of rights is not a deprecation policy.
+status_page:
+  published: true
+  url: https://status.rainfocus.com/
+  status: 200
+  provider: Atlassian Statuspage
+  page_id: bt8sc94xpyd4
+  machine_readable_api: https://status.rainfocus.com/api/v2/summary.json
+  machine_readable_status: 200
+  components:
+  - Admin
+  - Events
+  - Leads
+  - Workflow
+  note: >-
+    Statuspage exposes the full v2 API (summary, status, components, incidents, scheduled
+    maintenances) plus RSS and Atom feeds, so an agent can subscribe to RainFocus availability
+    without credentials. Note that the API and MCP Tools terms forbid publishing uptime metrics or
+    latency data without prior written approval.
+versioning:
+  scheme: none-published
+  in_url: false
+  header: null
+  note: >-
+    No version namespace, version header or version policy is published. /api/v1 returns the same
+    generic missing-apiProfile 400 as /api and is not evidence of a version namespace.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  contractual_clause:
+    source: https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+    section: 6. MODIFICATIONS AND SUSPENSION
+    text: >-
+      "RainFocus may modify, update, or discontinue the Developer Tools at any time. RainFocus may
+      suspend or terminate Customer's access immediately if Customer's use creates a security,
+      legal, or platform risk. RainFocus will provide reasonable notice of material changes when
+      practicable."
+    assessment: >-
+      A reservation of rights with a best-efforts notice qualifier ("when practicable"), not a
+      deprecation policy. No notice period, no sunset window and no migration commitment.
+sla:
+  published: false
+  note: >-
+    No public SLA or uptime commitment. Availability terms live in the customer statement of work.
+    The API terms additionally prohibit publishing performance benchmarks, latency data or uptime
+    metrics without RainFocus's prior written approval.
+changelog:
+  published: false
+  note: >-
+    No dated product or API changelog is published. The nearest public surface is the news and
+    press index at https://www.rainfocus.com/company/news-press/ and the blog at
+    https://blog.rainfocus.com/, both of which carry release announcements in press-release form
+    rather than versioned entries. No ChangeLog pointer is emitted.
+  nearest_surfaces:
+  - url: https://www.rainfocus.com/company/news-press/
+    status: 200
+    kind: news and press index
+  - url: https://blog.rainfocus.com/feed/
+    status: 200
+    kind: RSS feed
+support:
+  help_center: https://help.rainfocus.com/s/
+  help_center_note: >-
+    Salesforce Experience Cloud community. The landing page loads anonymously but article content
+    and the API reference sit behind customer sign-in.
+  academy: https://learn.rainfocus.com/
+  contact: https://www.rainfocus.com/contact-us/
+  client_care_email: clientcare@rainfocus.com
+  security_email: security@rainfocus.com
+recent_product_milestones:
+  note: >-
+    Dated announcements gathered from the provider's own newsroom, recorded here because there is
+    no changelog. Not a substitute for one.
+  entries:
+  - date: '2026-07-07'
+    title: RainFocus Launches AI Agent Connectivity for Event Data with MCP Profiles
+    url: https://www.rainfocus.com/company/news-press/rainfocus-launches-ai-agent-connectivity-for-event-data-with-mcp-profiles/
+    relevance: developer-surface
+    detail: >-
+      MCP Profiles ship as part of RainFocus Nexus, adding an OAuth-secured remote MCP server for
+      live event data.

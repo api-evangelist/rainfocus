@@ -1,0 +1,173 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  live HTTP probes of https://api.rainfocus.com and https://api.rainfocus.com/mcp/ +
+  https://www.rainfocus.com/privacy-security/api-terms-and-conditions/
+description: >-
+  Cross-cutting runtime semantics for the RainFocus API and MCP surfaces. RainFocus publishes no
+  OpenAPI and no public developer reference, so most of this is read off the wire - principally the
+  Access-Control-Allow-Headers list the API returns, which is the single richest public statement
+  of what the API understands. Every field below is either observed or quoted; unknowns are marked
+  unknown rather than filled in.
+auth_style:
+  rest: apiProfile identifier per request plus OAuth (Global) client ID and secret
+  mcp: OAuth 2.1 bearer token, discovered via RFC 9728 protected-resource metadata
+  see: authentication/rainfocus-authentication.yml
+accepted_request_headers:
+  source: Access-Control-Allow-Headers on https://api.rainfocus.com
+  observed: '2026-08-26'
+  values:
+  - Content-Type
+  - Accept
+  - Accept-Encoding
+  - Cache-Control
+  - Host
+  - Pragma
+  - Referer
+  - User-Agent
+  - Authorization
+  - apiProfile
+  - widget
+  - authToken
+  - rfWidgetId
+  - rfAuthToken
+  - rfApiProfileId
+  - extraFields
+  - rfcsrf
+  - mcp-session-id
+  - mcp-protocol-version
+  - traceparent
+  - tracestate
+cors:
+  allow_methods: [POST, GET]
+  allow_credentials: true
+  max_age: 3600
+  vary: Origin
+  note: >-
+    Only POST and GET are advertised, on both the REST and MCP surfaces. There is no PUT, PATCH or
+    DELETE in the CORS policy, which is consistent with an RPC-shaped rather than
+    resource-REST-shaped API.
+request_id_tracing:
+  supported: true
+  mechanism: W3C Trace Context
+  request_headers: [traceparent, tracestate]
+  response_correlation_header: null
+  note: >-
+    The API accepts W3C traceparent and tracestate on inbound requests, but returns no request-id
+    or trace-id header on responses and puts no identifier in the error envelope, so a client
+    cannot cite an id back to support from a failed call.
+error_envelope:
+  format: proprietary
+  shape: '{"responseCode": "<string>", "responseMessage": "<string>"}'
+  rfc9457: false
+  see: errors/rainfocus-problem-types.yml
+pagination:
+  style: unknown
+  note: >-
+    Not documented publicly and not observable without credentials. Not guessed at.
+field_selection:
+  mechanism: extraFields
+  status: undocumented
+  note: >-
+    An extraFields request header is accepted by the API, which implies an opt-in field-expansion
+    or sparse-field mechanism, but its grammar is not published. Recorded as observed, not
+    explained.
+  additional: >-
+    RainFocus describes its RESTful APIs as using "modular field mappings" configured per API
+    Profile, so field shaping is largely a profile-configuration concern rather than a per-request
+    query concern.
+versioning:
+  scheme: unknown
+  in_url: false
+  observed: >-
+    /api/v1 returns the same missing-apiProfile 400 as /api, which is the router's generic
+    response and is not evidence of a v1 namespace. No version header is advertised.
+  policy_statement: >-
+    "RainFocus may modify, update, or discontinue the Developer Tools at any time... RainFocus will
+    provide reasonable notice of material changes when practicable." - API and MCP Tools Terms,
+    section 6.
+  policy_note: >-
+    That is a reservation of rights, not a versioning or deprecation commitment. No Sunset or
+    Deprecation header (RFC 8594) is advertised or observed.
+idempotency:
+  supported: unknown
+  header: null
+  scope: null
+  retention: null
+  note: >-
+    No idempotency key header appears in the Access-Control-Allow-Headers list and no idempotency
+    behaviour is documented publicly. Since the MCP surface performs writes (closing registration,
+    updating speaker details), the absence of a published idempotency contract is a real gap for
+    agent callers, not an N/A. NO Idempotency pointer is emitted in apis.yml.
+rate_limit_signaling:
+  headers_observed: []
+  status_on_exhaustion: unknown
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header was returned on any observed response. The
+    API terms confirm rate limits exist ("bypass or circumvent usage limits, rate limits ... is
+    prohibited") but publish no numbers and no runtime signal.
+  see: rate-limits/rainfocus-rate-limits.yml
+dry_run_mode:
+  supported: unknown
+  note: >-
+    No dry-run, preview or validate-only mode is documented for either the REST API or the MCP
+    tools.
+reversibility:
+  grade: undocumented
+  applicable: true
+  applicable_note: >-
+    NOT read-only. RainFocus states its MCP tools write - "closing registration or updating speaker
+    details" - and the REST API includes an Attendee Store write endpoint, so reversibility is a
+    live question for this provider rather than N/A.
+  write_surfaces:
+  - surface: MCP tool - close registration
+    source: https://www.rainfocus.com/company/news-press/rainfocus-launches-ai-agent-connectivity-for-event-data-with-mcp-profiles/
+    reversal_operation: unknown
+    reversal_window: null
+    note: >-
+      Registration state is plausibly re-openable in the RainFocus admin UI, but no reversal
+      operation, tool name or window is published, so none is asserted.
+  - surface: MCP tool - update speaker details
+    source: https://www.rainfocus.com/company/news-press/rainfocus-launches-ai-agent-connectivity-for-event-data-with-mcp-profiles/
+    reversal_operation: unknown
+    reversal_window: null
+  - surface: REST - Attendee Store endpoint (attendee profile upsert)
+    source: https://experienceleague.adobe.com/en/docs/experience-platform/destinations/catalog/marketing-automation/rainfocus
+    reversal_operation: unknown
+    reversal_window: null
+  compensating_controls_published:
+  - full audit logging of MCP activity
+  - role-based access control
+  - per-event scoping so a planner can withhold tool access from an event entirely
+  compensating_controls_note: >-
+    RainFocus publishes controls that let an operator see and constrain what an agent did, but
+    nothing that tells an agent in advance whether an action it is about to take can be taken back.
+  gap: >-
+    No cancel, undo, restore, reopen or reverse operation is named anywhere public, and no window
+    is stated. An agent acting on RainFocus data today cannot determine reversibility before
+    acting. No window is invented here.
+event_surface:
+  asyncapi_published: false
+  webhook_catalog_published: false
+  note: >-
+    RainFocus operates an outbound integration/streaming capability - the Adobe Experience Platform
+    setup instructions have the customer paste a Dataflow ID and a Streaming Endpoint into a
+    RainFocus Integration Profile, so RainFocus pushes attendee data outward to a caller-supplied
+    URL. That is webhook-shaped. But no event catalog, no event names, no payload schemas and no
+    subscription API are published on the public web, so there is nothing to capture as a Webhooks
+    artifact and NO Webhooks or AsyncAPI pointer is emitted. Recorded as a known, undocumented
+    surface rather than an absence.
+  evidence:
+  - url: https://experienceleague.adobe.com/en/docs/experience-platform/sources/ui-tutorials/create/analytics/rainfocus
+    status: 200
+    detail: >-
+      "Activate Integration Profiles in RainFocus by pasting the Dataflow ID and Streaming Endpoint
+      from the configured integration."
+  - url: https://api.rainfocus.com/asyncapi.yaml
+    status: 404
+cross_links:
+  errors: errors/rainfocus-problem-types.yml
+  authentication: authentication/rainfocus-authentication.yml
+  scopes: scopes/rainfocus-scopes.yml
+  lifecycle: lifecycle/rainfocus-lifecycle.yml
+  rate_limits: rate-limits/rainfocus-rate-limits.yml

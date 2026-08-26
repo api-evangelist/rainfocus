@@ -1,0 +1,70 @@
+generated: '2026-08-26'
+method: probed
+source: live unauthenticated requests to https://api.rainfocus.com and https://api.rainfocus.com/mcp/
+format: proprietary
+format_note: >-
+  NOT RFC 9457. The REST API returns a bespoke JSON envelope with a string responseCode and a
+  responseMessage, served as application/json;charset=UTF-8 rather than application/problem+json.
+  The MCP endpoint returns text/plain for its 401 rather than a JSON-RPC error object.
+description: >-
+  RainFocus publishes no OpenAPI and no public error reference, so this catalog is built only from
+  error responses observed live on unauthenticated requests. It is deliberately short: every entry
+  below was returned by the API to this crawler on 2026-08-26. No error codes are extrapolated,
+  and the numbering scheme implied by responseCode 103 is not guessed at.
+envelope:
+  content_type: application/json;charset=UTF-8
+  shape:
+    responseCode: string
+    responseMessage: string
+  example: '{"responseCode":"103","responseMessage":"Required parameter missing: apiProfile"}'
+  note: >-
+    The envelope carries no type URI, no instance identifier, no trace id and no remediation link.
+    An agent gets a human-readable sentence and a numeric code with no published dictionary.
+problem_types:
+- code: '103'
+  http_status: 400
+  title: Required parameter missing
+  detail: 'Required parameter missing: apiProfile'
+  observed_on:
+  - https://api.rainfocus.com/api
+  - https://api.rainfocus.com/api/search
+  - https://api.rainfocus.com/api/v1
+  - https://api.rainfocus.com/api/mcp
+  remediation: >-
+    Send the apiProfile identifier for the API Profile provisioned to your RainFocus tenant. The
+    header name apiProfile is accepted per the Access-Control-Allow-Headers response header.
+  generalization_note: >-
+    responseCode 103 is returned for a missing apiProfile specifically. Whether 103 covers other
+    missing parameters is not publicly documented and is not assumed here.
+- code: null
+  http_status: 401
+  title: MCP access token not found
+  detail: Access token not found in mcp request
+  content_type: text/plain;charset=UTF-8
+  observed_on:
+  - https://api.rainfocus.com/mcp/
+  - https://events.rainfocus.com/mcp/
+  www_authenticate: Bearer resource_metadata="https://events.rainfocus.com/.well-known/oauth-protected-resource/mcp//"
+  remediation: >-
+    Follow the RFC 9728 protected-resource metadata to https://events.rainfocus.com/oidc, obtain a
+    bearer token and resend with an Authorization header.
+  note: >-
+    A plain-text body on a JSON-RPC endpoint. A conforming MCP client expecting a JSON-RPC error
+    object will not parse this.
+- code: null
+  http_status: 404
+  title: Not found
+  detail: Error
+  content_type: text/html;charset=utf-8
+  observed_on:
+  - https://api.rainfocus.com/openapi.json
+  - https://api.rainfocus.com/.well-known/security.txt
+  - https://api.rainfocus.com/graphql
+  note: >-
+    A five-byte HTML body reading "Error". Genuine 404 (a control probe of an invented path
+    behaves identically), but it carries no structured payload.
+gaps:
+- No published error code reference or dictionary.
+- No RFC 9457 application/problem+json representation.
+- No request or trace identifier returned in the error envelope, despite the API accepting W3C traceparent and tracestate request headers.
+- Error bodies vary in content type across surfaces (JSON on REST, text/plain on MCP, HTML on 404).
