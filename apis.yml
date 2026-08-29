@@ -14,6 +14,17 @@ description: >-
   closing registration or updating speaker details, with per-event scoping and audit logging. No
   OpenAPI, GraphQL, AsyncAPI, WSDL or Protobuf contract is published to the public web; API and MCP
   reference material lives behind the RainFocus Help Center and the customer statement of work.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://www.rainfocus.com/assets/images/default-open-graph.jpg
 url: https://raw.githubusercontent.com/api-evangelist/rainfocus/refs/heads/main/apis.yml
 x-type: company
