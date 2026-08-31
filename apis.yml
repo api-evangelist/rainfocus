@@ -36,6 +36,20 @@ created: '2026-08-26'
 modified: '2026-08-26'
 tags:
 - Company
+- Event
+- Event Management
+- Event Marketing
+- Registration
+- Conferences
+- Webinars
+- Marketing Technology
+- Attendee Data
+- MCP
+- Agents
+- Enterprise Software
+- Software-as-a-Service
+tags_raw:
+- Company
 - Events
 - Event Management
 - Event Marketing
@@ -64,6 +78,11 @@ apis:
   humanURL: https://www.rainfocus.com/why-rainfocus/integrations/
   baseURL: https://api.rainfocus.com/api
   tags:
+  - Event
+  - Registration
+  - Attendee Data
+  - Integration
+  tags_raw:
   - Events
   - Registration
   - Attendee Data
@@ -95,6 +114,10 @@ apis:
   humanURL: https://www.rainfocus.com/company/news-press/rainfocus-launches-ai-agent-connectivity-for-event-data-with-mcp-profiles/
   baseURL: https://api.rainfocus.com/mcp/
   tags:
+  - MCP
+  - Agents
+  - Event
+  tags_raw:
   - MCP
   - Agents
   - Events
