@@ -1,19 +1,18 @@
 aid: rainfocus
 name: RainFocus
-description: >-
-  RainFocus is a Lehi, Utah based enterprise event management and event marketing platform used by
-  large B2B organizations to run conferences, roadshows, field-marketing programs, kickoffs and
-  webinars from a single data-first system. The platform spans registration, call for papers,
-  speaker enablement, sponsor and exhibitor activation, meetings management, on-site check-in and
-  badge printing, a mobile app, and portfolio-level analytics, all anchored on a Global Attendee
-  Profile. Its developer surface is delivered as a customer-provisioned "Integration Suite":
-  RESTful APIs at api.rainfocus.com governed by named API Profiles with modular field mappings and
-  OAuth (Global) client credentials, plus RainFocus Nexus MCP Profiles - an OAuth-secured remote
-  Model Context Protocol server at api.rainfocus.com/mcp/ that lets AI agents read live session
-  capacity, check-in status, attendee, exhibitor and session records and write back changes such as
-  closing registration or updating speaker details, with per-event scoping and audit logging. No
-  OpenAPI, GraphQL, AsyncAPI, WSDL or Protobuf contract is published to the public web; API and MCP
-  reference material lives behind the RainFocus Help Center and the customer statement of work.
+description: 'RainFocus is a Lehi, Utah based enterprise event management and event marketing platform
+  used by large B2B organizations to run conferences, roadshows, field-marketing programs, kickoffs and
+  webinars from a single data-first system. The platform spans registration, call for papers, speaker
+  enablement, sponsor and exhibitor activation, meetings management, on-site check-in and badge printing,
+  a mobile app, and portfolio-level analytics, all anchored on a Global Attendee Profile. Its developer
+  surface is delivered as a customer-provisioned "Integration Suite": RESTful APIs at api.rainfocus.com
+  governed by named API Profiles with modular field mappings and OAuth (Global) client credentials, plus
+  RainFocus Nexus MCP Profiles - an OAuth-secured remote Model Context Protocol server at api.rainfocus.com/mcp/
+  that lets AI agents read live session capacity, check-in status, attendee, exhibitor and session records
+  and write back changes such as closing registration or updating speaker details, with per-event scoping
+  and audit logging. No OpenAPI, GraphQL, AsyncAPI, WSDL or Protobuf contract is published to the public
+  web; API and MCP reference material lives behind the RainFocus Help Center and the customer statement
+  of work.'
 deliveryModel:
   model: saas
   open_source: false
@@ -78,18 +77,16 @@ tags_raw:
 - Enterprise Software
 - SaaS
 apis:
-- aid: rainfocus-platform-api
+- aid: rainfocus:rainfocus-platform-api
   name: RainFocus Platform API
-  description: >-
-    The RainFocus RESTful integration API. Requests are dispatched against api.rainfocus.com and
-    are keyed on an apiProfile identifier - a named API Profile configured per customer in the
-    RainFocus Integration Suite that declares which endpoints (Attendee Store, session,
-    registration, exhibitor and similar) are enabled and how fields are mapped. Unauthenticated
-    requests to any /api path return the RainFocus JSON error envelope
-    {"responseCode","responseMessage"} with HTTP 400 and "Required parameter missing: apiProfile".
-    Credentials are OAuth (Global) client ID and client secret issued per profile. No public
-    OpenAPI or reference site is published; documentation is delivered through the RainFocus Help
-    Center and the customer SOW.
+  description: 'The RainFocus RESTful integration API. Requests are dispatched against api.rainfocus.com
+    and are keyed on an apiProfile identifier - a named API Profile configured per customer in the RainFocus
+    Integration Suite that declares which endpoints (Attendee Store, session, registration, exhibitor
+    and similar) are enabled and how fields are mapped. Unauthenticated requests to any /api path return
+    the RainFocus JSON error envelope {"responseCode","responseMessage"} with HTTP 400 and "Required parameter
+    missing: apiProfile". Credentials are OAuth (Global) client ID and client secret issued per profile.
+    No public OpenAPI or reference site is published; documentation is delivered through the RainFocus
+    Help Center and the customer SOW.'
   humanURL: https://www.rainfocus.com/why-rainfocus/integrations/
   baseURL: https://api.rainfocus.com/api
   tags:
@@ -113,19 +110,17 @@ apis:
     url: conventions/rainfocus-conventions.yml
   - type: RateLimits
     url: rate-limits/rainfocus-rate-limits.yml
-- aid: rainfocus-mcp
+- aid: rainfocus:rainfocus-mcp
   name: RainFocus Nexus MCP Profiles
-  description: >-
-    RainFocus Nexus MCP Profiles, announced 7 July 2026, is a first-party remote Model Context
-    Protocol server that exposes live RainFocus event data to AI clients. The endpoint answers at
-    https://api.rainfocus.com/mcp/ and is OAuth-gated: an unauthenticated tools/list POST returns
-    HTTP 401 "Access token not found in mcp request" with a WWW-Authenticate Bearer challenge
-    carrying RFC 9728 resource_metadata, and the authorization server is the RainFocus OIDC
-    provider at https://events.rainfocus.com/oidc. Per the launch announcement the tool surface is
-    bidirectional - reading session capacity, check-in status, attendee, exhibitor and session
-    records, and writing changes such as closing registration or updating speaker details - with
-    per-user authentication, role-based access control, per-event scoping and audit logging. The
-    live tool list and input schemas require an authenticated introspection.
+  description: 'RainFocus Nexus MCP Profiles, announced 7 July 2026, is a first-party remote Model Context
+    Protocol server that exposes live RainFocus event data to AI clients. The endpoint answers at https://api.rainfocus.com/mcp/
+    and is OAuth-gated: an unauthenticated tools/list POST returns HTTP 401 "Access token not found in
+    mcp request" with a WWW-Authenticate Bearer challenge carrying RFC 9728 resource_metadata, and the
+    authorization server is the RainFocus OIDC provider at https://events.rainfocus.com/oidc. Per the
+    launch announcement the tool surface is bidirectional - reading session capacity, check-in status,
+    attendee, exhibitor and session records, and writing changes such as closing registration or updating
+    speaker details - with per-user authentication, role-based access control, per-event scoping and audit
+    logging. The live tool list and input schemas require an authenticated introspection.'
   humanURL: https://www.rainfocus.com/company/news-press/rainfocus-launches-ai-agent-connectivity-for-event-data-with-mcp-profiles/
   baseURL: https://api.rainfocus.com/mcp/
   tags:
