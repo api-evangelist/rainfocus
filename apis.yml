@@ -142,6 +142,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: RateLimits
+  url: rate-limits/rainfocus-rate-limits.yml
 - type: Website
   url: https://www.rainfocus.com/
 - type: Documentation
