@@ -16,3 +16,42 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: rainfocus-adobe-analytics-own
+  label: Adobe Analytics (own)
+  partner: adobe-analytics
+  partner_name: Adobe Analytics (own)
+  category: Adobe Exchange Experience Cloud listing (Analytics)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://exchange.adobe.com/apps/ec/108922
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: rainfocus-adobe-experience-cloud-own
+  label: Adobe Experience Cloud (own)
+  partner: adobe-experience-cloud
+  partner_name: Adobe Experience Cloud (own)
+  category: Adobe Exchange Experience Cloud listing (Experience Platform)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://exchange.adobe.com/apps/ec/600117
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: rainfocus-marketo-own
+  label: Marketo (own)
+  partner: marketo
+  partner_name: Marketo (own)
+  category: Adobe Exchange Experience Cloud listing (Marketo Engage)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://exchange.adobe.com/apps/ec/107472
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
